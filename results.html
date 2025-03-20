@@ -22,21 +22,10 @@
 
     <section class="results">
         <h2>Protein Sequence and Analysis Results</h2>
-        <p>Protein Family: <strong>Example Family</strong></p>
-        <p>Taxonomy: <strong>Example Taxonomy</strong></p>
-
-        <div class="sequence">
-            <h3>Protein Sequence</h3>
-            <pre>Example protein sequence...</pre>
-        </div>
-
-        <div class="analysis">
-            <h3>Analysis Data</h3>
-            <p>Sample analysis result...</p>
-            <div id="chart">
-                <!-- Insert chart here -->
-            </div>
-        </div>
+        <!-- Fetch data dynamically from PHP -->
+        <?php
+        include 'fetch_results.php';
+        ?>
     </section>
 
     <footer>

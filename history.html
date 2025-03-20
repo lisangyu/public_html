@@ -23,11 +23,10 @@
     <section class="history">
         <h2>Your Previous Searches</h2>
         <p>Here are your previously generated analysis data:</p>
-        <!-- You can dynamically populate this with previous results if stored in a database -->
-        <ul>
-            <li><a href="#">Previous Search 1</a></li>
-            <li><a href="#">Previous Search 2</a></li>
-        </ul>
+        <!-- Fetch historical data from PHP -->
+        <?php
+        include 'fetch_results.php';
+        ?>
     </section>
 
     <footer>

@@ -1,27 +1,45 @@
 #!/bin/bash
 
-# 检查是否提供了蛋白质ID
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <protein_id>"
+# Check if exactly two arguments (Protein Family and Taxonomy) are provided
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <protein_family> <taxonomy> <search_id>"
     exit 1
 fi
 
-# 获取蛋白质ID
-protein_id=$1
+# Assign input arguments
+protein_family=$1
+taxonomy=$2
+search_id=$3
 
-# 设置NCBI的电子邮件地址
-email="your-email@example.com"
+# Generate the output file name
+output_file="${search_id}.fasta"
 
-# 使用esearch查找蛋白质ID
-echo "Searching for protein data for ID: $protein_id..."
+# Set NCBI email
+email="lisangyu1005@outlook.com"
 
-# 使用efetch获取蛋白质序列
-efetch -db protein -id $protein_id -rettype gb -retmode text | grep -A 1 "ORIGIN" | tail -n +2 | tr -d -c 'A-Za-z' > protein_sequence.txt
+echo "Searching for proteins in family: $protein_family, taxonomy: $taxonomy..."
 
-# 检查结果
-if [ -s protein_sequence.txt ]; then
-    echo "Protein sequence fetched successfully. The sequence is saved to protein_sequence.txt."
+# Use EDirect to find relevant protein IDs
+protein_ids=$(esearch -db protein -query "$protein_family [Protein Name] AND $taxonomy [Organism]" | efetch -format uid)
+
+# Check if any protein IDs were found
+if [ -z "$protein_ids" ]; then
+    echo "No proteins found for family: $protein_family in taxonomy: $taxonomy."
+    exit 1
+fi
+
+echo "Found protein IDs: $protein_ids"
+
+# Fetch sequences for all found proteins
+echo "Fetching protein sequences..."
+for protein_id in $protein_ids; do
+    efetch -db protein -id "$protein_id" -format fasta >> "$output_file"
+done
+
+# Check if sequences were retrieved
+if [ -s "$output_file" ]; then
+    echo "Protein sequences fetched successfully. The sequences are saved to $output_file."
 else
-    echo "Failed to fetch protein sequence for $protein_id."
+    echo "Failed to fetch protein sequences."
     exit 1
 fi

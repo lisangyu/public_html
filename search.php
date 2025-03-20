@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Call backend scripts to fetch data and perform analysis
     // 1. Fetch protein data
-    shell_exec("bash fetch_protein_data.sh $protein_family $taxonomy");
+    shell_exec("bash fetch_protein_data.sh $protein_family $taxonomy $search_id");
 
     // 2. Perform EMBOSS, Clustal Omega, BLAST, and Motif analysis
     shell_exec("bash run_emboss_analysis.sh $protein_family $taxonomy");

@@ -28,7 +28,7 @@
 
     <section class="search">
         <h3>Search Protein Family and Taxonomy</h3>
-        <form action="search.php" method="POST">
+        <form id="search-form">
             <label for="protein-family">Protein Family:</label>
             <input type="text" id="protein-family" name="protein-family" placeholder="Enter protein family" required>
             
@@ -43,6 +43,26 @@
         <p>© 2025 Bioinformatics Tools Platform. All rights reserved.</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        document.getElementById("search-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent page refresh
+
+            let formData = new FormData(this);
+
+            fetch("search.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    window.location.href = "results.html?search_id=" + data.search_id;
+                } else {
+                    alert("Search failed: " + data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
 </body>
 </html>

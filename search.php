@@ -1,24 +1,29 @@
 <?php
 // search.php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get user input
-    $protein_id = $_POST['protein_id'];  // Protein ID provided by the user
+    // Retrieve user input
+    $protein_family = $_POST['protein-family'];
+    $taxonomy = $_POST['taxonomy'];
 
-    // Call Python script to fetch protein data
-    $command = "python3 fetch_protein_data.py $protein_id";  // Call the Python script
-    $output = shell_exec($command);
+    // Generate a unique search ID for this query
+    $search_id = uniqid('search_', true);
 
-    // Process output result
-    if ($output) {
-        echo "Protein data fetched successfully.<br>";
-        // Display or store the result
-    } else {
-        echo "Failed to fetch protein data.<br>";
-    }
+    // Call backend scripts to fetch data and perform analysis
+    // 1. Fetch protein data
+    shell_exec("bash fetch_protein_data.sh $protein_family $taxonomy");
+
+    // 2. Perform EMBOSS, Clustal Omega, BLAST, and Motif analysis
+    shell_exec("bash run_emboss_analysis.sh $protein_family $taxonomy");
+    shell_exec("bash run_clustalo.sh $protein_family $taxonomy");
+    shell_exec("bash run_blast.sh $protein_family $taxonomy");
+    shell_exec("python3 generate_plots.py $protein_family $taxonomy");
+    shell_exec("python3 process_motifs.py $protein_family $taxonomy");
+
+    // 3. Store the results in the database
+    shell_exec("php store_results.php $search_id");
+
+    // 4. Redirect to results page with the search_id in the URL
+    header("Location: results.html?search_id=$search_id");
+    exit;
 }
 ?>
-
-<form method="POST">
-    Protein ID: <input type="text" name="protein_id" required>
-    <input type="submit" value="Fetch Protein Data">
-</form>

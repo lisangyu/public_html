@@ -51,18 +51,23 @@
 
             fetch("search.php", {
                 method: "POST",
-                body: formData
+                body: new FormData(document.getElementById("search-form"))
             })
             .then(response => response.json())
             .then(data => {
+                let messageBox = document.getElementById("error-message");
                 if (data.status === "success") {
                     window.location.href = "results.html?search_id=" + data.search_id;
                 } else {
-                    alert("Search failed: " + data.message);
+                    //alert("Search failed: " + data.message);
+                    messageBox.innerText = "Search failed " + data.message;
                 }
             })
-            .catch(error => console.error("Error:", error));
-        });
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Request failed." + error.message);
+                });
+            });
     </script>
 </body>
 </html>

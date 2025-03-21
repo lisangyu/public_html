@@ -35,6 +35,9 @@
             <label for="taxonomy">Taxonomy:</label>
             <input type="text" id="taxonomy" name="taxonomy" placeholder="Enter taxonomy" required>
             
+            <!-- Add an element to display error messages -->
+            <div id="error-message"></div>
+
             <button type="submit">Search</button>
         </form>
     </section>
@@ -56,11 +59,12 @@
             .then(response => response.json())
             .then(data => {
                 let messageBox = document.getElementById("error-message");
+                messageBox.style.display = "block"; 
                 if (data.status === "success") {
                     window.location.href = "results.html?search_id=" + data.search_id;
                 } else {
                     //alert("Search failed: " + data.message);
-                    messageBox.innerText = "Search failed " + data.message;
+                    messageBox.innerText = "Search failed: " + data.message;
                 }
             })
             .catch(error => {

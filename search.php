@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Split protein_ids string into an array (assuming the protein accessions are in $output)
-    $protein_ids_array = explode(" ", trim($output));
+    $protein_ids_array = explode("\n", trim($output));
 
     try {
         // Start a database transaction
@@ -42,7 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fasta_file = "protein_results/{$search_id}.fasta";
 
         if (!file_exists($fasta_file)) {
-            throw new Exception("FASTA file not found");
+            //throw new Exception("FASTA file not found");
+            throw new Exception("No protein data fetched");
         }
 
         $fasta_contents = file_get_contents($fasta_file);

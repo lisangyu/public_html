@@ -32,9 +32,9 @@
                     return;
                 }
                 document.getElementById("results").innerHTML = `
-                    <h4>EMBOSS Analysis</h4><pre>${data.emboss_result || "No data available"}</pre>
-                    <h4>Clustal Omega Alignment</h4><pre>${data.clustalo_result || "No data available"}</pre>
-                    <h4>BLAST Results</h4><pre>${data.blast_result || "No data available"}</pre>
+                    <h4>search_id</h4><pre>${search_id || "No data available"}</pre>
+                    <h4>protein_id</h4><pre>${protein_id || "No data available"}</pre>
+                    <h4>fasta_sequence</h4><pre>${fasta_sequence || "No data available"}</pre>
                     <h4>Protein Conservation Plot</h4>
                     ${data.plots_result ? `<img src="${data.plots_result}" alt="Conservation Plot" />` : "<p>No plot available</p>"}
                     <h4>Motif Analysis</h4><pre>${data.motifs_result || "No data available"}</pre>

@@ -181,3 +181,13 @@ footer {
 footer p {
     margin: 0;
 }
+
+#error-message {
+    display: none;  /* 默认隐藏 */
+    color: red;
+    font-weight: bold;
+    padding: 10px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+}

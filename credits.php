@@ -11,11 +11,11 @@
         <h1>Statement of Credits</h1>
         <nav>
             <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="results.html">Results</a></li>
-                <li><a href="example.html">Example Data</a></li>
-                <li><a href="history.html">History</a></li>
-                <li><a href="credits.html">Credits</a></li>
+                <li><a href="index.php">Home</a></li>
+                <li><a href="results.php">Results</a></li>
+                <li><a href="example.php">Example Data</a></li>
+                <li><a href="history.php">History</a></li>
+                <li><a href="credits.php">Credits</a></li>
             </ul>
         </nav>
     </header>

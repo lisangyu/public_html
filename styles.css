@@ -68,7 +68,7 @@ button {
     border: none;
     padding: 12px 30px;
     font-size: 1.1em;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s;
 }

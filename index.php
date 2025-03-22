@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,11 +14,19 @@
         <h1>Bioinformatics Tools Platform</h1>
         <nav>
             <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="results.html">Results</a></li>
-                <li><a href="example.html">Example Data</a></li>
-                <li><a href="history.html">History</a></li>
-                <li><a href="credits.html">Credits</a></li>
+                <li><a href="index.php">Home</a></li>
+                <li><a href="results.php">Results</a></li>
+                <li><a href="example.php">Example Data</a></li>
+                <li><a href="history.php">History</a></li>
+                <li><a href="credits.php">Credits</a></li>
+
+                <?php if (isset($_SESSION['username'])): ?>
+                    <li>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</li>
+                    <li><a href="logout.php">Logout</a></li>
+                <?php else: ?>
+                    <li><a href="register.php">Register</a></li>
+                    <li><a href="login.php">Login</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
     </header>
@@ -35,7 +46,6 @@
             <label for="taxonomy">Taxonomy:</label>
             <input type="text" id="taxonomy" name="taxonomy" placeholder="Enter taxonomy" required>
             
-            <!-- Add an element to display error messages -->
             <div id="error-message"></div>
 
             <button type="submit">Search</button>
@@ -48,30 +58,29 @@
 
     <script>
         document.getElementById("search-form").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent page refresh
+            event.preventDefault(); 
 
             let formData = new FormData(this);
 
             fetch("search.php", {
                 method: "POST",
-                body: new FormData(document.getElementById("search-form"))
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
                 let messageBox = document.getElementById("error-message");
                 messageBox.style.display = "block"; 
                 if (data.status === "success") {
-                    window.location.href = "results.html?search_id=" + data.search_id;
+                    window.location.href = "results.php?search_id=" + data.search_id;
                 } else {
-                    //alert("Search failed: " + data.message);
                     messageBox.innerText = "Search failed: " + data.message;
                 }
             })
             .catch(error => {
                 console.error("Error:", error);
                 alert("Request failed." + error.message);
-                });
             });
+        });
     </script>
 </body>
 </html>

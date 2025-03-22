@@ -19,7 +19,7 @@ try {
         echo json_encode([
             "search_id"   => $result["search_id"] ?? null,
             "protein_id"   => $result["protein_id"] ?? null,
-            "fasta_sequence"   => $result["fasta_sequence"] ?? null,
+            "fasta_sequence"   => $result["fasta_sequence"] ?? null
             //"emboss_result"   => $result["emboss_result"] ?? null,
             //"clustalo_result" => $result["clustalo_result"] ?? null,
             //"blast_result"    => $result["blast_result"] ?? null,

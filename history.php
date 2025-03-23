@@ -98,7 +98,7 @@ try {
                 <th>Search ID</th>
                 <th>Protein Family</th>
                 <th>Taxonomy</th>
-                <th>Timestamp</th>
+                <th>Search Time</th>
                 <th>Results</th>
             </tr>
             <?php foreach ($history_records as $record): ?>

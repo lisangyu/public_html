@@ -10,6 +10,10 @@ $search_id = $_GET['search_id'] ?? '';
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 
+// Check if species sort is requested
+$order = isset($_GET['order']) ? $_GET['order'] : 'ASC'; // Default order is ASC
+$orderBy = isset($_GET['orderby']) ? $_GET['orderby'] : 'species'; // Default sort column is species
+
 if (empty($search_id)) {
     die("Error: search_id is required.");
 }
@@ -20,8 +24,12 @@ $stmt->execute([$search_id]);
 $total_rows = $stmt->fetchColumn();
 $total_pages = ceil($total_rows / $limit);
 
-// Fetch protein sequences for the given search_id with pagination
-$sql = "SELECT protein_id, fasta_sequence FROM protein_sequences WHERE search_id = ? LIMIT $limit OFFSET $offset";
+// Fetch protein sequences for the given search_id with pagination and sorting
+$sql = "SELECT protein_id, protein_name, species, sequence 
+        FROM protein_sequences 
+        WHERE search_id = ? 
+        ORDER BY $orderBy $order 
+        LIMIT $limit OFFSET $offset";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$search_id]);
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -68,45 +76,118 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .pagination a:hover {
             background-color: #ddd;
         }
+        /* Disable button style */
+        button[disabled] {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .warning {
+            color: red;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
     <h2>Search Results for <?= htmlspecialchars($search_id) ?></h2>
 
+    <!-- Display the total number of results -->
+    <p>Total Results: <?= $total_rows ?> protein sequences found.</p>
+
     <?php if (count($results) > 0): ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Protein ID</th>
-                    <th>FASTA Sequence</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($results as $row): ?>
+        <form id="analysis-form" action="msa_results.php" method="POST">
+            <table>
+                <thead>
                     <tr>
-                        <td><?= htmlspecialchars($row['protein_id']) ?></td>
-                        <td style="white-space: pre-wrap;"><?= nl2br(htmlspecialchars($row['fasta_sequence'])) ?></td>
+                        <th>
+                            <input type="checkbox" id="select-all" /> Select All (for MSA)
+                        </th>
+                        <th>Protein ID</th>
+                        <th>Protein Name</th>
+                        <th>
+                            <a href="?search_id=<?= urlencode($search_id) ?>&orderby=species&order=<?= $order === 'ASC' ? 'DESC' : 'ASC' ?>">Species</a>
+                        </th>
+                        <th>Sequence</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($results as $row): ?>
+                        <tr>
+                            <td><input type="checkbox" class="protein-checkbox" name="selected_proteins[]" value="<?= htmlspecialchars($row['protein_id']) ?>"></td>
+                            <td><a href="protein_analysis.php?protein_id=<?= urlencode($row['protein_id']) ?>" target="_blank"><?= htmlspecialchars($row['protein_id']) ?></a></td>
+                            <td><?= htmlspecialchars($row['protein_name']) ?></td>
+                            <td><?= htmlspecialchars($row['species']) ?></td>
+                            <td style="white-space: pre-wrap;"><?= nl2br(htmlspecialchars($row['sequence'])) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
 
-        <!-- Pagination -->
-        <div class="pagination">
-            <?php if ($page > 1): ?>
-                <a href="?search_id=<?= urlencode($search_id) ?>&page=<?= $page - 1 ?>">« Prev</a>
-            <?php endif; ?>
+            <div class="pagination">
+                <?php if ($page > 1): ?>
+                    <a href="?search_id=<?= urlencode($search_id) ?>&page=<?= $page - 1 ?>&orderby=<?= urlencode($orderBy) ?>&order=<?= urlencode($order) ?>">« Prev</a>
+                <?php endif; ?>
 
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <a href="?search_id=<?= urlencode($search_id) ?>&page=<?= $i ?>" class="<?= $i == $page ? 'active' : '' ?>"><?= $i ?></a>
-            <?php endfor; ?>
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="?search_id=<?= urlencode($search_id) ?>&page=<?= $i ?>&orderby=<?= urlencode($orderBy) ?>&order=<?= urlencode($order) ?>" class="<?= $i == $page ? 'active' : '' ?>"><?= $i ?></a>
+                <?php endfor; ?>
 
-            <?php if ($page < $total_pages): ?>
-                <a href="?search_id=<?= urlencode($search_id) ?>&page=<?= $page + 1 ?>">Next »</a>
-            <?php endif; ?>
-        </div>
+                <?php if ($page < $total_pages): ?>
+                    <a href="?search_id=<?= urlencode($search_id) ?>&page=<?= $page + 1 ?>&orderby=<?= urlencode($orderBy) ?>&order=<?= urlencode($order) ?>">Next »</a>
+                <?php endif; ?>
+            </div>
+
+            <!-- Run MSA button, disabled initially -->
+            <button type="submit" id="run-msa-btn" disabled>Run MSA (Clustal Omega)</button>
+        </form>
+
+        <!-- Link to perform conservation level analysis on all proteins, always visible -->
+        <br><br>
+        <a href="conservation_analysis.php?search_id=<?= urlencode($search_id) ?>" id="conservation-analysis-link">Perform Conservation Level Analysis on All Proteins</a>
+
+        <!-- Warning message when not enough proteins are selected -->
+        <p id="warning" class="warning" style="display:none;">Please select at least two proteins for MSA!</p>
+
     <?php else: ?>
         <p>No results found for this search.</p>
     <?php endif; ?>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const checkboxes = document.querySelectorAll(".protein-checkbox");
+            const selectAllCheckbox = document.getElementById("select-all");
+            const msaButton = document.getElementById("run-msa-btn");
+            const warningMessage = document.getElementById("warning");
+
+            // Update button state based on checkbox selection
+            function updateMSAButton() {
+                const checkedCount = document.querySelectorAll(".protein-checkbox:checked").length;
+                msaButton.disabled = checkedCount < 2; // Disable button if fewer than 2 proteins are selected
+                warningMessage.style.display = checkedCount < 2 ? "block" : "none"; // Show warning if fewer than 2 proteins are selected
+            }
+
+            // Handle select all/deselect all
+            selectAllCheckbox.addEventListener("change", function () {
+                const isChecked = selectAllCheckbox.checked;
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = isChecked;
+                });
+                updateMSAButton(); // Update button state
+            });
+
+            // Handle individual checkbox changes
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener("change", updateMSAButton);
+            });
+
+            // Ensure user selects at least 2 proteins before submitting
+            document.getElementById("analysis-form").addEventListener("submit", function (event) {
+                const checkedCount = document.querySelectorAll(".protein-checkbox:checked").length;
+                if (checkedCount < 2) {
+                    event.preventDefault(); // Prevent form submission
+                    alert("Please select at least two proteins for MSA!"); // Alert the user
+                }
+            });
+        });
+    </script>
 </body>
 </html>

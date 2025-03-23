@@ -55,9 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fasta_contents = file_get_contents($fasta_file);
 
         // Use regex to extract individual FASTA sequences
-        // - `(\S+)` captures the protein accession number (first word after `>`)
-        // - `(.*?)` captures the header (optional description)
-        // - `([^>]*)` captures the sequence until the next `>` (lazy match)
         preg_match_all("/>(\S+)\s*(.*?)\n([^>]*)/s", $fasta_contents, $matches, PREG_SET_ORDER);
 
         // Create a dictionary mapping accession numbers to their corresponding FASTA sequences
@@ -69,19 +66,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Remove newlines and whitespace from the sequence to ensure a continuous string
             $sequence = preg_replace('/\s+/', '', trim($match[3]));
 
-            // Store the FASTA sequence in the dictionary with the proper format
-            $fasta_dict[$acc_number] = ">$acc_number $header\n$sequence";
+            // Extract protein name and species from header (assumes a specific format)
+            preg_match("/\[(.*?)\]/", $header, $species_match);
+            $species = $species_match[1] ?? ''; // Species extracted from the header
+            $protein_name = preg_replace("/\s*\[.*\]/", '', $header); // Remove species information from the protein name
+
+            // Store the FASTA sequence and related information
+            $fasta_dict[$acc_number] = [
+                'sequence' => $sequence,
+                'protein_name' => $protein_name,
+                'species' => $species
+            ];
         }
 
         // Prepare the SQL statement for inserting protein sequences into the database
-        $sql = "INSERT INTO protein_sequences (search_id, protein_id, fasta_sequence) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO protein_sequences (search_id, protein_id, protein_name, species, sequence) VALUES (?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
 
         // Iterate through the protein IDs obtained from the shell script output
         foreach ($protein_ids_array as $protein_id) {
             if (isset($fasta_dict[$protein_id])) {
                 // If a corresponding FASTA sequence exists, insert it into the database
-                $stmt->execute([$search_id, $protein_id, $fasta_dict[$protein_id]]);
+                $stmt->execute([
+                    $search_id,
+                    $protein_id,
+                    $fasta_dict[$protein_id]['protein_name'],
+                    $fasta_dict[$protein_id]['species'],
+                    $fasta_dict[$protein_id]['sequence']
+                ]);
             } else {
                 // If no matching sequence is found, throw an exception
                 throw new Exception("No FASTA sequence found for protein ID: $protein_id");
@@ -100,5 +112,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(["status" => "error", "message" => $e->getMessage()]);
     }
 }
-
 ?>

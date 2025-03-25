@@ -1,0 +1,34 @@
+########################################
+# Program: patmatmotifs
+# Rundate: Mon 24 Mar 2025 16:39:51
+# Commandline: patmatmotifs
+#    -sequence KFP87454.1.fasta
+#    -outfile KFP87454.1_motif.txt
+# Report_format: dbmotif
+# Report_file: KFP87454.1_motif.txt
+########################################
+
+#=======================================
+#
+# Sequence:      from: 1   to: 353
+# HitCount: 1
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+Length = 4
+Start = position 136 of sequence
+End = position 139 of sequence
+
+Motif = AMIDATION
+
+LLSAAMGKKQSRTL
+     |  |
+   136  139
+
+
+#---------------------------------------
+#---------------------------------------

@@ -1,9 +1,5 @@
 <?php
-include 'config.php';
-
-if ($pdo) {
-    echo "Database connection successful!";
-} else {
-    echo "Database connection failed!";
-}
+exec('env', $env_output);
+echo "Environment Variables:\n";
+echo implode("\n", $env_output);
 ?>

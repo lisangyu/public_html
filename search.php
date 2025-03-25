@@ -79,25 +79,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ];
         }
 
-        // Prepare the SQL statement for inserting protein sequences into the database
-        $sql = "INSERT INTO protein_sequences (search_id, protein_id, protein_name, species, sequence) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $pdo->prepare($sql);
+        // Prepare the SQL statement for inserting protein sequences
+        $sql_insert_protein = "INSERT IGNORE INTO protein_sequences (protein_id, protein_name, species, sequence) VALUES (?, ?, ?, ?)";
+        $stmt_insert_protein = $pdo->prepare($sql_insert_protein);
+
+        // Prepare the SQL statement for inserting search-protein mapping
+        $sql_insert_search = "INSERT INTO search_protein (search_id, protein_id) VALUES (?, ?)";
+        $stmt_insert_search = $pdo->prepare($sql_insert_search);
 
         // Iterate through the protein IDs obtained from the shell script output
         foreach ($protein_ids_array as $protein_id) {
             if (isset($fasta_dict[$protein_id])) {
-                // If a corresponding FASTA sequence exists, insert it into the database
-                $stmt->execute([
-                    $search_id,
+                // Insert protein sequence (ignores if already exists)
+                $stmt_insert_protein->execute([
                     $protein_id,
                     $fasta_dict[$protein_id]['protein_name'],
                     $fasta_dict[$protein_id]['species'],
                     $fasta_dict[$protein_id]['sequence']
                 ]);
-            } else {
-                // If no matching sequence is found, throw an exception
-                throw new Exception("No FASTA sequence found for protein ID: $protein_id");
             }
+
+            // Insert search-protein mapping
+            $stmt_insert_search->execute([$search_id, $protein_id]);
         }
 
         // Commit transaction

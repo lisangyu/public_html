@@ -19,20 +19,25 @@ if (empty($search_id)) {
 }
 
 // Get total count of results for pagination
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM protein_sequences WHERE search_id = ?");
+$stmt = $pdo->prepare("SELECT COUNT(*) 
+                       FROM search_protein sp 
+                       JOIN protein_sequences ps ON sp.protein_id = ps.protein_id 
+                       WHERE sp.search_id = ?");
 $stmt->execute([$search_id]);
 $total_rows = $stmt->fetchColumn();
 $total_pages = ceil($total_rows / $limit);
 
 // Fetch protein sequences for the given search_id with pagination and sorting
-$sql = "SELECT protein_id, protein_name, species, sequence 
-        FROM protein_sequences 
-        WHERE search_id = ? 
+$sql = "SELECT ps.protein_id, ps.protein_name, ps.species, ps.sequence 
+        FROM search_protein sp
+        JOIN protein_sequences ps ON sp.protein_id = ps.protein_id
+        WHERE sp.search_id = ?
         ORDER BY $orderBy $order 
         LIMIT $limit OFFSET $offset";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$search_id]);
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>

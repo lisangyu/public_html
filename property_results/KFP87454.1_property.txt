@@ -1,0 +1,48 @@
+PEPSTATS of KFP87454.1 from 1 to 353
+
+Molecular weight = 40177.01  		Residues = 353   
+Average Residue Weight  = 113.816 	Charge   = 15.0  
+Isoelectric Point = 8.8621
+A280 Molar Extinction Coefficients  = 101870 (reduced)   102370 (cystine bridges)
+A280 Extinction Coefficients 1mg/ml = 2.536 (reduced)   2.548 (cystine bridges)
+Improbability of expression in inclusion bodies = 0.756
+
+Residue		Number		Mole%		DayhoffStat
+A = Ala		30		8.499  		0.988  	
+B = Asx		0		0.000  		0.000  	
+C = Cys		9		2.550  		0.879  	
+D = Asp		10		2.833  		0.515  	
+E = Glu		7		1.983  		0.331  	
+F = Phe		28		7.932  		2.203  	
+G = Gly		26		7.365  		0.877  	
+H = His		14		3.966  		1.983  	
+I = Ile		14		3.966  		0.881  	
+J = ---		0		0.000  		0.000  	
+K = Lys		10		2.833  		0.429  	
+L = Leu		48		13.598 		1.838  	
+M = Met		8		2.266  		1.333  	
+N = Asn		9		2.550  		0.593  	
+O = ---		0		0.000  		0.000  	
+P = Pro		14		3.966  		0.763  	
+Q = Gln		18		5.099  		1.307  	
+R = Arg		15		4.249  		0.867  	
+S = Ser		21		5.949  		0.850  	
+T = Thr		16		4.533  		0.743  	
+U = ---		0		0.000  		0.000  	
+V = Val		28		7.932  		1.202  	
+W = Trp		15		4.249  		3.269  	
+X = Xaa		0		0.000  		0.000  	
+Y = Tyr		13		3.683  		1.083  	
+Z = Glx		0		0.000  		0.000  	
+
+Property	Residues		Number		Mole%
+Tiny		(A+C+G+S+T)		102		28.895
+Small		(A+B+C+D+G+N+P+S+T+V)	163		46.176
+Aliphatic	(A+I+L+V)		120		33.994
+Aromatic	(F+H+W+Y)		70		19.830
+Non-polar	(A+C+F+G+I+L+M+P+V+W+Y)	233		66.006
+Polar		(D+E+H+K+N+Q+R+S+T+Z)	120		33.994
+Charged		(B+D+E+H+K+R+Z)		56		15.864
+Basic		(H+K+R)			39		11.048
+Acidic		(B+D+E+Z)		17		 4.816
+

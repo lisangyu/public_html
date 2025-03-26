@@ -1,16 +1,16 @@
 ########################################
 # Program: patmatmotifs
-# Rundate: Mon 24 Mar 2025 16:39:51
+# Rundate: Wed 26 Mar 2025 16:22:03
 # Commandline: patmatmotifs
 #    -sequence KFP87454.1.fasta
-#    -outfile KFP87454.1_motif.txt
+#    -outfile motif_results/KFP87454.1_motif.txt
 # Report_format: dbmotif
-# Report_file: KFP87454.1_motif.txt
+# Report_file: motif_results/KFP87454.1_motif.txt
 ########################################
 
 #=======================================
 #
-# Sequence:      from: 1   to: 353
+# Sequence: KFP87454.1     from: 1   to: 353
 # HitCount: 1
 #
 # Full: No

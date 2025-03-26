@@ -15,12 +15,12 @@ def run_patmatmotifs(protein_id, sequence):
         raise EnvironmentError("patmatmotifs is not installed or not in PATH.")
     
     # Define output file name
-    output_file = f"/motif_results/{protein_id}_motif.txt"
+    output_file = f"motif_results/{protein_id}_motif.txt"
     
     # Save input sequence to a temporary file
     input_file = f"{protein_id}.fasta"
     with open(input_file, "w") as f:
-        f.write(sequence)
+        f.write(f">{protein_id}\n{sequence}\n")
     
     # Run patmatmotifs
     cmd = ["patmatmotifs", "-sequence", input_file, "-outfile", output_file]

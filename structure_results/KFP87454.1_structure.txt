@@ -1,0 +1,85 @@
+########################################
+# Program: garnier
+# Rundate: Wed 26 Mar 2025 16:22:03
+# Commandline: garnier
+#    -sequence KFP87454.1.fasta
+#    -outfile structure_results/KFP87454.1_structure.txt
+# Report_format: tagseq
+# Report_file: structure_results/KFP87454.1_structure.txt
+########################################
+
+#=======================================
+#
+# Sequence: KFP87454.1     from: 1   to: 353
+# HitCount: 105
+#
+# DCH = 0, DCS = 0
+# 
+#  Please cite:
+#  Garnier, Osguthorpe and Robson (1978) J. Mol. Biol. 120:97-120
+# 
+#
+#=======================================
+
+          .   10    .   20    .   30    .   40    .   50
+      HMNLLHDAGVRATHWLQGRFQGSQDWFLFISYAADLRNAFFVLFPIWFHF
+helix HHHHHHHHHHHHH                   HHHHHHH       H   
+sheet                           EEEE         EEEEE      
+turns              T  TTTTT   TT                   T    
+ coil               CC     CCC      CC            C  CCC
+          .   60    .   70    .   80    .   90    .  100
+      NEAVGIRLIWVSVIGDWLNLVFKWILFGERPYWWVHDTDYYSNNSAPEIQ
+helix     HH             HH                             
+sheet       EEEEEEEE    E  E EEE       EEE            EE
+turns   TT          TT      T   TT  TTT   TTTTTT     T  
+ coil CC              CC          CC            CCCCC   
+          .  110    .  120    .  130    .  140    .  150
+      QFPLTCETGPGSPSGHAMGAAGVYYVMVTALLSAAMGKKQSRTLGYWMLW
+helix                    HHH      HHHHHHHHHHH           
+sheet EE             EEEE   EEEEEE            EEE   EEEE
+turns    TTTTT T                                  TT    
+ coil   C     C CCCCC                        C   C      
+          .  160    .  170    .  180    .  190    .  200
+      TVLWTGFWAVQVCVCLSRVFIAAHFPHQVIAGVFSGMAVAKTFQHVQCIY
+helix                  HHHHHH          H HHHHHHHHHH     
+sheet EE        EEEEEEE          EEEEEE            EEEEE
+turns   TT TTT T                T                       
+ coil     C   C              CCC        C               
+          .  210    .  220    .  230    .  240    .  250
+      HASLRRYVGITFFLFSFTLGFYLLLRVLGVDLLWTLEKAQRWCNRPEWVH
+helix                               HHHHHHHH            
+sheet E      EEEEEEEE      EEEEEEEEE                  EE
+turns  T TTTT         TT TT                 TTTTT  TTT  
+ coil   C            C  C                        CC     
+          .  260    .  270    .  280    .  290    .  300
+      IDTTPFASLLRNLGILFGLGLALNSHMYQESCRGKQGQQLPFRLGCTAVS
+helix       HHHH            H    HH                  HHH
+sheet E           EEEEEEE                   EEE         
+turns  T   T    TT              T  TTTTTTTTT   TTTTT    
+ coil   CCC              CCC CCC                    C   
+          .  310    .  320    .  330    .  340    .  350
+      LLVLHLFDAFKPPSHMQLLFYALSFCKSAAVPLAAVGLIPYCLSQLLVTQ
+helix   HHHHHH      HHH  HHHHH   HHHHHHHH            HHH
+sheet EE               EE                EEEEE EEEEEE   
+turns         TT  TT          TTT             T         
+ coil           CC                                      
+      0
+      DKK
+helix    
+sheet    
+turns TTT
+ coil    
+
+#---------------------------------------
+#
+#  Residue totals: H: 99   E:112   T: 88   C: 54
+#         percent: H: 29.4 E: 33.2 T: 26.1 C: 16.0
+#
+#---------------------------------------
+
+#---------------------------------------
+# Total_sequences: 1
+# Total_length: 353
+# Reported_sequences: 1
+# Reported_hitcount: 105
+#---------------------------------------

@@ -14,134 +14,70 @@ $stmt->execute(['protein_id' => $protein_id]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($result) {
-    // If exists, retrieve the BLASTP result stored as JSON
-    $blast_data = json_decode($result['blastp_result'], true);
+    // If protein_id exists, display the results
+    echo "<h1>Protein Analysis for ID: {$protein_id}</h1>";
+    echo "<p>Protein ID: " . $result['protein_id'] . "</p>";
+    echo "<p>Sequence: " . $result['sequence'] . "</p>";
+    echo "<p>Motif Results: " . $result['motif_results'] . "</p>";
+    echo "<p>Property Results: " . $result['property_results'] . "</p>";
+    echo "<p>Secondary Structure Results: " . $result['structure_results'] . "</p>";
 } else {
-    try {
-        // Retrieve sequence from the database if protein_id not found in protein_analysis table
-        $stmt = $pdo->prepare("SELECT sequence FROM protein_sequences WHERE protein_id = :protein_id");
-        $stmt->execute(['protein_id' => $protein_id]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    // If protein_id does not exist, retrieve the sequence and run Python scripts
+    $stmt = $pdo->prepare("SELECT sequence FROM protein_sequences WHERE protein_id = :protein_id");
+    $stmt->execute(['protein_id' => $protein_id]);
+    $sequence_result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$result) {
-            die("<p>Error: Protein ID not found.</p>");
+    if ($sequence_result) {
+        $sequence = $sequence_result['sequence'];
+
+        // Run motif_analysis.py
+        $motif_output = shell_exec("python3 motif_analysis.py $protein_id '$sequence'");
+        $motif_results_file = 'motif_results/' . $protein_id . '_motif.txt';
+        if (file_exists($motif_results_file)) {
+            $motif_results = file_get_contents($motif_results_file);
+        } else {
+            $motif_results = null;
         }
 
-        $sequence = $result['sequence'];
-    } catch (PDOException $e) {
-        die("<p>Database error: " . $e->getMessage() . "</p>");
-    }
-    
-    // Define output file path for BLASTP results
-    $blastp_output = "blastp_results/" . $protein_id . "_blastp.txt";
-    
-    // Execute the BLASTP script (assumes you have a Python BLASTP script that takes protein_id and sequence)
-    $cmd = escapeshellcmd("python3 blast_analysis.py '$protein_id' '$sequence' '$blastp_output'");
-    shell_exec($cmd);
-    
-    // Read BLASTP results and store them in the database
-    $blastp_result = file_get_contents($blastp_output);
-    $blast_data = parse_blastp_results($blastp_result); // Parse the BLASTP result
-    
-    // Store BLASTP result as JSON in the database
-    $json_blastp_result = json_encode($blast_data);
-    $sql_insert = "INSERT INTO protein_analysis (protein_id, blastp_result) VALUES (:protein_id, :blastp_result)";
-    $stmt_insert = $pdo->prepare($sql_insert);
-    $stmt_insert->execute(['protein_id' => $protein_id, 'blastp_result' => $json_blastp_result]);
-}
-
-// Function to parse BLASTP result (Format 6) into an array
-function parse_blastp_results($blastp_result) {
-    $blast_data = [];
-    $lines = explode("\n", trim($blastp_result)); // Split result into lines
-
-    foreach ($lines as $line) {
-        $columns = explode("\t", $line); // Split each line by tab
-        if (count($columns) >= 12) { // Ensure the correct number of columns
-            $blast_data[] = [
-                'query_id' => $columns[0],
-                'subject_id' => $columns[1],
-                'percentage_identity' => $columns[2],
-                'alignment_length' => $columns[3],
-                'mismatches' => $columns[4],
-                'gap_openings' => $columns[5],
-                'q_start' => $columns[6],
-                'q_end' => $columns[7],
-                's_start' => $columns[8],
-                's_end' => $columns[9],
-                'e_value' => $columns[10],
-                'bit_score' => $columns[11],
-            ];
+        // Run property.py
+        $property_output = shell_exec("python3 property.py $protein_id '$sequence'");
+        $property_results_file = 'property_results/' . $protein_id . '_property.txt';
+        if (file_exists($property_results_file)) {
+            $property_results = file_get_contents($property_results_file);
+        } else {
+            $property_results = null;
         }
+
+        // Run sec_structure.py
+        $structure_output = shell_exec("python3 sec_structure.py $protein_id '$sequence'");
+        $structure_results_file = 'structure_results/' . $protein_id . '_structure.txt';
+        if (file_exists($structure_results_file)) {
+            $structure_results = file_get_contents($structure_results_file);
+        } else {
+            $structure_results = null;
+        }
+
+        // Save results into the database
+        $insert_sql = "INSERT INTO protein_analysis (protein_id, sequence, motif_results, property_results, structure_results) 
+                       VALUES (:protein_id, :sequence, :motif_results, :property_results, :structure_results)";
+        $stmt = $pdo->prepare($insert_sql);
+        $stmt->execute([
+            'protein_id' => $protein_id,
+            'sequence' => $sequence,
+            'motif_results' => $motif_results,
+            'property_results' => $property_results,
+            'structure_results' => $structure_results
+        ]);
+
+        // Display the results
+        echo "<h1>Protein Analysis for ID: {$protein_id}</h1>";
+        echo "<p>Protein ID: {$protein_id}</p>";
+        echo "<p>Sequence: {$sequence}</p>";
+        echo "<h3>Motif Results:</h3><pre>{$motif_results}</pre>";
+        echo "<h3>Property Results:</h3><pre>{$property_results}</pre>";
+        echo "<h3>Secondary Structure Results:</h3><pre>{$structure_results}</pre>";
+    } else {
+        echo "<p>Protein sequence not found for Protein ID: {$protein_id}</p>";
     }
-    return $blast_data;
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protein Analysis Result</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-    </style>
-</head>
-<body>
-    <h2>Protein Analysis Result</h2>
-    <p><strong>Protein ID:</strong> <?php echo htmlspecialchars($protein_id); ?></p>
-    
-    <h3>BLASTP Result:</h3>
-    <?php if (!empty($blast_data)) : ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Query ID</th>
-                    <th>Subject ID</th>
-                    <th>Percentage Identity</th>
-                    <th>Alignment Length</th>
-                    <th>Mismatches</th>
-                    <th>Gap Openings</th>
-                    <th>Query Start</th>
-                    <th>Query End</th>
-                    <th>Subject Start</th>
-                    <th>Subject End</th>
-                    <th>E-value</th>
-                    <th>Bit Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($blast_data as $data) : ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($data['query_id']); ?></td>
-                        <td><?php echo htmlspecialchars($data['subject_id']); ?></td>
-                        <td><?php echo htmlspecialchars($data['percentage_identity']); ?></td>
-                        <td><?php echo htmlspecialchars($data['alignment_length']); ?></td>
-                        <td><?php echo htmlspecialchars($data['mismatches']); ?></td>
-                        <td><?php echo htmlspecialchars($data['gap_openings']); ?></td>
-                        <td><?php echo htmlspecialchars($data['q_start']); ?></td>
-                        <td><?php echo htmlspecialchars($data['q_end']); ?></td>
-                        <td><?php echo htmlspecialchars($data['s_start']); ?></td>
-                        <td><?php echo htmlspecialchars($data['s_end']); ?></td>
-                        <td><?php echo htmlspecialchars($data['e_value']); ?></td>
-                        <td><?php echo htmlspecialchars($data['bit_score']); ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php else : ?>
-        <p>No BLASTP results found for this protein.</p>
-    <?php endif; ?>
-</body>
-</html>

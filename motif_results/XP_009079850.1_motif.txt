@@ -1,16 +1,16 @@
 ########################################
 # Program: patmatmotifs
-# Rundate: Mon 24 Mar 2025 16:18:39
+# Rundate: Wed 26 Mar 2025 16:22:12
 # Commandline: patmatmotifs
-#    -sequence stdin
-#    -auto
+#    -sequence XP_009079850.1.fasta
+#    -outfile motif_results/XP_009079850.1_motif.txt
 # Report_format: dbmotif
-# Report_file: stdin.patmatmotifs
+# Report_file: motif_results/XP_009079850.1_motif.txt
 ########################################
 
 #=======================================
 #
-# Sequence:      from: 1   to: 353
+# Sequence: XP_009079850.1     from: 1   to: 358
 # HitCount: 1
 #
 # Full: No
@@ -20,14 +20,14 @@
 #=======================================
 
 Length = 4
-Start = position 136 of sequence
-End = position 139 of sequence
+Start = position 139 of sequence
+End = position 142 of sequence
 
 Motif = AMIDATION
 
 LLSAAMGKKQSRTL
      |  |
-   136  139
+   139  142
 
 
 #---------------------------------------

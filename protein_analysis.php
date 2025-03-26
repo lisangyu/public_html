@@ -17,10 +17,10 @@ if ($result) {
     // If protein_id exists, display the results
     echo "<h1>Protein Analysis for ID: {$protein_id}</h1>";
     echo "<p>Protein ID: " . $result['protein_id'] . "</p>";
-    echo "<p>Sequence: " . $result['sequence'] . "</p>";
-    echo "<p>Motif Results: " . $result['motif_results'] . "</p>";
-    echo "<p>Property Results: " . $result['property_results'] . "</p>";
-    echo "<p>Secondary Structure Results: " . $result['structure_results'] . "</p>";
+    echo "<p>Sequence: <pre>" . nl2br(htmlspecialchars_decode($result['sequence'])) . "</pre></p>";
+    echo "<p>Motif Results: <pre>" . nl2br(htmlspecialchars_decode($result['motif_results'])) . "</pre></p>";
+    echo "<p>Property Results: <pre>" . nl2br(htmlspecialchars_decode($result['property_results'])) . "</pre></p>";
+    echo "<p>Secondary Structure Results: <pre>" . nl2br(htmlspecialchars_decode($result['structure_results'])) . "</pre></p>";
 } else {
     // If protein_id does not exist, retrieve the sequence and run Python scripts
     $stmt = $pdo->prepare("SELECT sequence FROM protein_sequences WHERE protein_id = :protein_id");
@@ -35,6 +35,7 @@ if ($result) {
         $motif_results_file = 'motif_results/' . $protein_id . '_motif.txt';
         if (file_exists($motif_results_file)) {
             $motif_results = file_get_contents($motif_results_file);
+            $motif_results = htmlspecialchars($motif_results, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         } else {
             $motif_results = null;
         }
@@ -44,6 +45,7 @@ if ($result) {
         $property_results_file = 'property_results/' . $protein_id . '_property.txt';
         if (file_exists($property_results_file)) {
             $property_results = file_get_contents($property_results_file);
+            $property_results = htmlspecialchars($property_results, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         } else {
             $property_results = null;
         }
@@ -53,6 +55,7 @@ if ($result) {
         $structure_results_file = 'structure_results/' . $protein_id . '_structure.txt';
         if (file_exists($structure_results_file)) {
             $structure_results = file_get_contents($structure_results_file);
+            $structure_results = htmlspecialchars($structure_results, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         } else {
             $structure_results = null;
         }

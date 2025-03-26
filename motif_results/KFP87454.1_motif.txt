@@ -1,6 +1,6 @@
 ########################################
 # Program: patmatmotifs
-# Rundate: Wed 26 Mar 2025 16:22:03
+# Rundate: Wed 26 Mar 2025 18:49:50
 # Commandline: patmatmotifs
 #    -sequence KFP87454.1.fasta
 #    -outfile motif_results/KFP87454.1_motif.txt

@@ -15,8 +15,7 @@ session_start();
         <nav>
             <ul>
                 <li><a href="index.php">Home</a></li>
-                <li><a href="results.php">Results</a></li>
-                <li><a href="example.php">Example Data</a></li>
+                <li><a href="https://bioinfmsc8.bio.ed.ac.uk/~s2746775/website/results.php?search_id=search_67e43bf6e7acb5.85963812&protein_family=glucose-6-phosphatase&taxonomy=Aves">Example Data</a></li>
                 <li><a href="history.php">History</a></li>
                 <li><a href="credits.php">Credits</a></li>
 
@@ -61,6 +60,8 @@ session_start();
             event.preventDefault(); 
 
             let formData = new FormData(this);
+            let proteinFamily = document.getElementById("protein-family").value;
+            let taxonomy = document.getElementById("taxonomy").value;
 
             fetch("search.php", {
                 method: "POST",
@@ -71,7 +72,11 @@ session_start();
                 let messageBox = document.getElementById("error-message");
                 messageBox.style.display = "block"; 
                 if (data.status === "success") {
-                    window.location.href = "results.php?search_id=" + data.search_id;
+                    let url = "results.php?search_id=" + encodeURIComponent(data.search_id) +
+                      "&protein_family=" + encodeURIComponent(proteinFamily) +
+                      "&taxonomy=" + encodeURIComponent(taxonomy);
+
+                    window.location.href = url;                    
                 } else {
                     messageBox.innerText = "Search failed: " + data.message;
                 }

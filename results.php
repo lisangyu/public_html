@@ -7,6 +7,8 @@ $limit = 20;
 
 // Get search_id from GET parameter
 $search_id = $_GET['search_id'] ?? '';
+$protein_family = isset($_GET['protein_family']) ? htmlspecialchars($_GET['protein_family']) : 'Not provided';
+$taxonomy = isset($_GET['taxonomy']) ? htmlspecialchars($_GET['taxonomy']) : 'Not provided';
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 
@@ -93,7 +95,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </style>
 </head>
 <body>
-    <h2>Search Results for <?= htmlspecialchars($search_id) ?></h2>
+    <h2>Search Results for Protein Family: <?= htmlspecialchars($protein_family) ?>, Taxonomy: <?= htmlspecialchars($taxonomy) ?></h2>
 
     <!-- Display the total number of results -->
     <p>Total Results: <?= $total_rows ?> protein sequences found.</p>

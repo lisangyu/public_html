@@ -106,8 +106,8 @@ try {
                     <td><?php echo htmlspecialchars($record['search_id']); ?></td>
                     <td><?php echo htmlspecialchars($record['Protein_Family']); ?></td>
                     <td><?php echo htmlspecialchars($record['Taxonomy']); ?></td>
-                    <td><?php echo htmlspecialchars($record['search_time']); ?></td> <!-- 修正字段名 -->
-                    <td><a href="results.php?search_id=<?php echo urlencode($record['search_id']); ?>">View Results</a></td>
+                    <td><?php echo htmlspecialchars($record['search_time']); ?></td>
+                    <td><a href="results.php?search_id=<?php echo urlencode($record['search_id']); ?>&protein_family=<?php echo urlencode($record['Protein_Family']); ?>&taxonomy=<?php echo urlencode($record['Taxonomy']); ?>">View Results</a></td>
                 </tr>
             <?php endforeach; ?>
         </table>

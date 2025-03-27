@@ -53,6 +53,8 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="header.css">
     <title>Search History</title>
     <style>
         table {
@@ -89,7 +91,24 @@ try {
     </style>
 </head>
 <body>
+<header>
+        <nav>
+            <ul>
+                <li><a href="index.php">Home</a></li>
+                <li><a href="results.php">Example Data</a></li>
+                <li><a href="history.php">History</a></li>
+                <li><a href="credits.php">Credits</a></li>
 
+                <?php if (isset($_SESSION['username'])): ?>
+                    <li>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</li>
+                    <li><a href="logout.php">Logout</a></li>
+                <?php else: ?>
+                    <li><a href="register.php">Register</a></li>
+                    <li><a href="login.php">Login</a></li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+    </header>
     <h2>Search History for <?php echo htmlspecialchars($username); ?></h2>
 
     <?php if ($total_records > 0): ?>

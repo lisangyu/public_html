@@ -41,13 +41,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_proteins']))
     $msaResult = file_get_contents($outputFile);
 
     // Display the result (or save to file)
-    echo "<h2>Clustal Omega MSA Results</h2>";
-    echo "<pre>$msaResult</pre>";
+    echo "<div class='container'>";
+    echo "<h2 class='result-header'>Clustal Omega MSA Results</h2>";
+    echo "<pre class='msa-result'>$msaResult</pre>";
+    echo "</div>";
 
     // Clean up temporary files
     unlink($tmpFile);
     unlink($outputFile);
 } else {
-    echo "No proteins selected for MSA.";
+    echo "<div class='container'>";
+    echo "<h2 class='error-message'>No proteins selected for MSA.</h2>";
+    echo "</div>";
 }
 ?>
+
+<!-- Add this in your HTML body part -->
+<style>
+    /* General Styles */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7f6;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background-color: #2c3e50;
+        padding: 15px 0;
+        color: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* General container for results or errors */
+    .container {
+        width: 80%;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2.result-header {
+        font-size: 2em;
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h2.error-message {
+        font-size: 1.8em;
+        color: #e74c3c;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    pre.msa-result {
+        font-family: "Courier New", Courier, monospace;
+        background-color: #ecf0f1;
+        padding: 20px;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-size: 1em;
+        overflow-x: auto;
+    }
+</style>

@@ -33,10 +33,9 @@ session_start();
     <section class="banner">
         <h2>Welcome to the Bioinformatics Tools Platform</h2>
         <p>Providing sequence alignment, structure prediction, and more.</p>
-        <button id="learn-more">Learn More</button>
     </section>
 
-    <section class="search">
+    <section class="search" style="text-align: center; margin: 0 auto; padding: 40px; background-color: rgba(255, 255, 255, 0.9); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); border-radius: 8px;">
         <h3>Search Protein Family and Taxonomy</h3>
         <form id="search-form">
             <label for="protein-family">Protein Family:</label>
@@ -50,10 +49,6 @@ session_start();
             <button type="submit">Search</button>
         </form>
     </section>
-
-    <footer>
-        <p>© 2025 Bioinformatics Tools Platform. All rights reserved.</p>
-    </footer>
 
     <script>
         document.getElementById("search-form").addEventListener("submit", function(event) {

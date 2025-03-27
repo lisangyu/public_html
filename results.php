@@ -49,6 +49,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="header.css">
     <style>
         table {
             width: 100%;
@@ -95,6 +96,24 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </style>
 </head>
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.php">Home</a></li>
+                <li><a href="results.php">Example Data</a></li>
+                <li><a href="history.php">History</a></li>
+                <li><a href="credits.php">Credits</a></li>
+
+                <?php if (isset($_SESSION['username'])): ?>
+                    <li>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</li>
+                    <li><a href="logout.php">Logout</a></li>
+                <?php else: ?>
+                    <li><a href="register.php">Register</a></li>
+                    <li><a href="login.php">Login</a></li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+    </header>
     <h2>Search Results for Protein Family: <?= htmlspecialchars($protein_family) ?>, Taxonomy: <?= htmlspecialchars($taxonomy) ?></h2>
 
     <!-- Display the total number of results -->
@@ -111,7 +130,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <th>Protein ID</th>
                         <th>Protein Name</th>
                         <th>
-                            <a href="?search_id=<?= urlencode($search_id) ?>&orderby=species&order=<?= $order === 'ASC' ? 'DESC' : 'ASC' ?>">Species</a>
+                            <a href="?search_id=<?= urlencode($search_id) ?>&protein_family=<?= urlencode($protein_family) ?>&taxonomy=<?= urlencode($taxonomy) ?>&orderby=species&order=<?= $order === 'ASC' ? 'DESC' : 'ASC' ?>">Species</a>
                         </th>
                         <th>Sequence</th>
                     </tr>
@@ -131,15 +150,15 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="pagination">
                 <?php if ($page > 1): ?>
-                    <a href="?search_id=<?= urlencode($search_id) ?>&page=<?= $page - 1 ?>&orderby=<?= urlencode($orderBy) ?>&order=<?= urlencode($order) ?>">« Prev</a>
+                    <a href="?search_id=<?= urlencode($search_id) ?>&protein_family=<?= urlencode($protein_family) ?>&taxonomy=<?= urlencode($taxonomy) ?>&page=<?= $page - 1 ?>&orderby=<?= urlencode($orderBy) ?>&order=<?= urlencode($order) ?>">« Prev</a>
                 <?php endif; ?>
 
                 <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                    <a href="?search_id=<?= urlencode($search_id) ?>&page=<?= $i ?>&orderby=<?= urlencode($orderBy) ?>&order=<?= urlencode($order) ?>" class="<?= $i == $page ? 'active' : '' ?>"><?= $i ?></a>
+                    <a href="?search_id=<?= urlencode($search_id) ?>&protein_family=<?= urlencode($protein_family) ?>&taxonomy=<?= urlencode($taxonomy) ?>&page=<?= $i ?>&orderby=<?= urlencode($orderBy) ?>&order=<?= urlencode($order) ?>" class="<?= $i == $page ? 'active' : '' ?>"><?= $i ?></a>
                 <?php endfor; ?>
 
                 <?php if ($page < $total_pages): ?>
-                    <a href="?search_id=<?= urlencode($search_id) ?>&page=<?= $page + 1 ?>&orderby=<?= urlencode($orderBy) ?>&order=<?= urlencode($order) ?>">Next »</a>
+                    <a href="?search_id=<?= urlencode($search_id) ?>&protein_family=<?= urlencode($protein_family) ?>&taxonomy=<?= urlencode($taxonomy) ?>&page=<?= $page + 1 ?>&orderby=<?= urlencode($orderBy) ?>&order=<?= urlencode($order) ?>">Next »</a>
                 <?php endif; ?>
             </div>
 

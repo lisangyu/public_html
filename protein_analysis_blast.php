@@ -1,5 +1,5 @@
 <?php
-require 'config.php'; // Database configuration file
+require 'config.php';
 
 // Get protein_id from URL parameter
 if (!isset($_GET['protein_id'])) {
@@ -31,15 +31,12 @@ if ($result) {
     } catch (PDOException $e) {
         die("<p>Database error: " . $e->getMessage() . "</p>");
     }
-    
-    // Define output file path for BLASTP results
+
     $blastp_output = "blastp_results/" . $protein_id . "_blastp.txt";
     
-    // Execute the BLASTP script (assumes you have a Python BLASTP script that takes protein_id and sequence)
     $cmd = escapeshellcmd("python3 blast_analysis.py '$protein_id' '$sequence' '$blastp_output'");
     shell_exec($cmd);
     
-    // Read BLASTP results and store them in the database
     $blastp_result = file_get_contents($blastp_output);
     $blast_data = parse_blastp_results($blastp_result); // Parse the BLASTP result
     
@@ -50,14 +47,14 @@ if ($result) {
     $stmt_insert->execute(['protein_id' => $protein_id, 'blastp_result' => $json_blastp_result]);
 }
 
-// Function to parse BLASTP result (Format 6) into an array
+// Function to parse BLASTP result into an array
 function parse_blastp_results($blastp_result) {
     $blast_data = [];
-    $lines = explode("\n", trim($blastp_result)); // Split result into lines
+    $lines = explode("\n", trim($blastp_result));
 
     foreach ($lines as $line) {
-        $columns = explode("\t", $line); // Split each line by tab
-        if (count($columns) >= 12) { // Ensure the correct number of columns
+        $columns = explode("\t", $line);
+        if (count($columns) >= 12) {
             $blast_data[] = [
                 'query_id' => $columns[0],
                 'subject_id' => $columns[1],

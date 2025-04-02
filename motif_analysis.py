@@ -4,13 +4,7 @@ import shutil
 import argparse
 
 def run_patmatmotifs(protein_id, sequence):
-    """
-    Run patmatmotifs to analyze motifs in a protein sequence.
-    
-    :param protein_id: Identifier for the protein.
-    :param sequence: Protein sequence in FASTA format as a string.
-    """
-    # Ensure EMBOSS is installed
+
     if not shutil.which("patmatmotifs"):
         raise EnvironmentError("patmatmotifs is not installed or not in PATH.")
     

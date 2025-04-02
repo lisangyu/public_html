@@ -1,5 +1,4 @@
 <?php
-// Include the database configuration file
 include 'config.php';
 session_start(); // Start session to check user login status
 
@@ -9,27 +8,22 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-// Get the logged-in user's username
 $username = $_SESSION['username'];
 
-// Get the current page number from URL, default to page 1
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-$records_per_page = 20; // Number of records per page
-
+$records_per_page = 20;
 // Calculate the offset for SQL query
 $offset = ($page - 1) * $records_per_page;
 
 try {
-    // Get total number of search history records for the user
     $sql_total = "SELECT COUNT(*) FROM search_history WHERE username = ?";
     $stmt_total = $pdo->prepare($sql_total);
     $stmt_total->execute([$username]);
-    $total_records = $stmt_total->fetchColumn(); // Fetch total number of records
+    $total_records = $stmt_total->fetchColumn();
 
-    // Calculate total pages
     $total_pages = ($total_records > 0) ? ceil($total_records / $records_per_page) : 1;
 
-    // Fetch search history records for the current page
+    // Fetch search history records
     $sql = "SELECT search_id, Protein_Family, Taxonomy, search_time 
             FROM search_history 
             WHERE username = ? 
@@ -97,6 +91,7 @@ try {
                 <li><a href="index.php">Home</a></li>
                 <li><a href="https://bioinfmsc8.bio.ed.ac.uk/~s2746775/website/results.php?search_id=search_67e43bf6e7acb5.85963812&protein_family=glucose-6-phosphatase&taxonomy=Aves">Example Data</a></li>
                 <li><a href="history.php">History</a></li>
+                <li><a href="help.php">Help/Context</a></li>
                 <li><a href="credits.php">Credits</a></li>
 
                 <?php if (isset($_SESSION['username'])): ?>
@@ -131,7 +126,6 @@ try {
             <?php endforeach; ?>
         </table>
 
-        <!-- Pagination -->
         <div class="pagination">
             <?php if ($page > 1): ?>
                 <a href="history.php?page=<?php echo $page - 1; ?>">Previous</a>

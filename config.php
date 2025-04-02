@@ -1,9 +1,9 @@
 <?php
 // config.php
-$host = '127.0.0.1';   // MySQL server address
-$dbname = 's2746775';  // Database name
-$username = 's2746775';    // MySQL username
-//$password = getenv('DB_PASSWORD');        // MySQL password
+$host = '127.0.0.1';
+$dbname = 's2746775';
+$username = 's2746775';
+//$password = getenv('DB_PASSWORD');
 $password = 'Qk3UxizAsaJO8ld_w6xrb1xdG2HRXoQpR$';
 
 try {
@@ -13,6 +13,6 @@ try {
 } catch (PDOException $e) {
     // Return a JSON response with an error message if database connection fails
     echo json_encode(["status" => "error", "message" => "Database connection failed: " . $e->getMessage()]);
-    exit;  // Ensure no other output is sent
+    exit;
 }
 ?>

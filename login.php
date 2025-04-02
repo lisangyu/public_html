@@ -34,22 +34,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="log.css">
 </head>
 <body>
-    <h2>Login</h2>
-    <form method="POST">
-        <label>Username:</label>
-        <input type="text" name="username" required>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+            
+            <button type="submit" class="btn">Login</button>
+        </form>
         
-        <label>Password:</label>
-        <input type="password" name="password" required>
+        <?php if (isset($error)) echo "<p class='error'>$error</p>"; ?>
         
-        <button type="submit">Login</button>
-    </form>
-    
-    <?php if (isset($error)) echo "<p>$error</p>"; ?>
-    
-    <a href="register.php">Don't have an account? Register here.</a>
+        <p>Don't have an account? <a href="register.php">Register here</a>.</p>
+    </div>
 </body>
 </html>

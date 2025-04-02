@@ -9,7 +9,6 @@ def run_pepstats(protein_id, sequence):
     output_dir = "property_results"
     os.makedirs(output_dir, exist_ok=True)
 
-    # Save the input sequence to a temporary FASTA file
     fasta_file = f"{protein_id}.fasta"
     with open(fasta_file, "w") as f:
         f.write(f">{protein_id}\n{sequence}\n")
@@ -19,7 +18,6 @@ def run_pepstats(protein_id, sequence):
     with open(output_file, "w") as f:
         subprocess.run(["pepstats", "-sequence", fasta_file, "-outfile", output_file], check=True)
 
-    # Remove the temporary FASTA file
     os.remove(fasta_file)
 
     #print(f"Physicochemical property analysis is complete, results saved in {output_file}")

@@ -12,8 +12,8 @@ def run_blast(sequence, output_file):
 
     if result.returncode != 0:
         error_message = f"Error: {result.stderr.strip()}"
-        print(error_message, file=sys.stderr)  # Print error for PHP to capture
-        sys.exit(1)  # Exit with error code
+        print(error_message, file=sys.stderr) 
+        sys.exit(1)
 
     # Save BLASTP output to file
     with open(output_file, "w") as f:

@@ -1,8 +1,7 @@
-/* 页眉样式 */
 header {
     background-color: #115d72;
     color: white;
-    padding: 3px 0; /* 减少上下间距 */
+    padding: 3px 0; 
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -20,7 +19,7 @@ nav ul {
 
 nav ul li {
     display: inline-block;
-    margin: 0 20px; /* 调整间距 */
+    margin: 0 20px;
 }
 
 nav ul li a {

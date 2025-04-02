@@ -22,7 +22,6 @@ def run_garnier(protein_id, sequence):
     with open(fasta_file, "w") as f:
         f.write(f">{protein_id}\n{sequence}\n")
 
-    # Set the output file path
     output_file = os.path.join(output_dir, f"{protein_id}_structure.txt")
 
     # Run garnier to predict secondary structure and specify the output file
@@ -33,10 +32,8 @@ def run_garnier(protein_id, sequence):
         text=True
     )
 
-    # Remove the temporary FASTA file
     os.remove(fasta_file)
 
-    # Notify about the analysis completion
     if os.path.exists(output_file):
         print(f"Secondary structure analysis is complete, results saved in {output_file}")
     else:

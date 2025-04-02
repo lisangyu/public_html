@@ -1,5 +1,5 @@
 <?php
-require 'config.php'; // Database configuration file
+require 'config.php';
 
 // Get protein_id from URL parameter
 if (!isset($_GET['protein_id'])) {
@@ -106,9 +106,8 @@ if ($result) {
 echo "</div>";
 ?>
 
-<!-- Add CSS for better styling -->
 <style>
-    /* General Styles */
+
     body {
         font-family: Arial, sans-serif;
         background-color: #f7f7f7;

@@ -1,13 +1,11 @@
 <?php
-include 'config.php'; // Database connection
+include 'config.php';
 session_start();
 
 // Check if the form was submitted and if proteins are selected
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_proteins'])) {
-    // Get selected protein IDs
     $selected_proteins = $_POST['selected_proteins'];
-    
-    // Ensure there are at least two proteins selected
+
     if (count($selected_proteins) < 2) {
         die("Error: At least two proteins are required for MSA.");
     }
@@ -28,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_proteins']))
         $sequences .= ">{$protein['protein_id']}\n{$protein['sequence']}\n";
     }
 
-    // Save the sequences to a temporary file
     $tmpFile = tempnam(sys_get_temp_dir(), 'clustal_');
     file_put_contents($tmpFile, $sequences);
 
@@ -37,16 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_proteins']))
     $command = "clustalo -i $tmpFile -o $outputFile --force --outfmt=clustal";
     exec($command);
 
-    // Read the MSA result
     $msaResult = file_get_contents($outputFile);
 
-    // Display the result (or save to file)
+    // Display the result
     echo "<div class='container'>";
     echo "<h2 class='result-header'>Clustal Omega MSA Results</h2>";
     echo "<pre class='msa-result'>$msaResult</pre>";
     echo "</div>";
 
-    // Clean up temporary files
     unlink($tmpFile);
     unlink($outputFile);
 } else {
@@ -56,9 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_proteins']))
 }
 ?>
 
-<!-- Add this in your HTML body part -->
 <style>
-    /* General Styles */
     body {
         font-family: Arial, sans-serif;
         background-color: #f4f7f6;
@@ -73,7 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_proteins']))
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    /* General container for results or errors */
     .container {
         width: 80%;
         margin: 20px auto;

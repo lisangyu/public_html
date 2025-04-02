@@ -1,8 +1,7 @@
 <?php
-include 'config.php'; // Database connection
+include 'config.php';
 session_start();
 
-// Set items per page
 $limit = 20;
 
 // Get search_id from GET parameter
@@ -85,7 +84,6 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .pagination a:hover {
             background-color: #ddd;
         }
-        /* Disable button style */
         button[disabled] {
             background-color: #ccc;
             cursor: not-allowed;
@@ -103,6 +101,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <li><a href="index.php">Home</a></li>
                 <li><a href="https://bioinfmsc8.bio.ed.ac.uk/~s2746775/website/results.php?search_id=search_67e43bf6e7acb5.85963812&protein_family=glucose-6-phosphatase&taxonomy=Aves">Example Data</a></li>
                 <li><a href="history.php">History</a></li>
+                <li><a href="help.php">Help/Context</a></li>
                 <li><a href="credits.php">Credits</a></li>
 
                 <?php if (isset($_SESSION['username'])): ?>
@@ -117,7 +116,6 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </header>
     <h2>Search Results for Protein Family: <?= htmlspecialchars($protein_family) ?>, Taxonomy: <?= htmlspecialchars($taxonomy) ?></h2>
 
-    <!-- Display the total number of results -->
     <p>Total Results: <?= $total_rows ?> protein sequences found.</p>
 
     <?php if (count($results) > 0): ?>
@@ -172,7 +170,6 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </a>
             </div>
 
-            <!-- Warning message when not enough proteins are selected -->
             <p id="warning" class="warning" style="display:none;">Please select at least two proteins for MSA!</p>
 
         </form>
@@ -202,7 +199,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 checkboxes.forEach(checkbox => {
                     checkbox.checked = isChecked;
                 });
-                updateMSAButton(); // Update button state
+                updateMSAButton();
             });
 
             // Handle individual checkbox changes
@@ -214,8 +211,8 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
             document.getElementById("analysis-form").addEventListener("submit", function (event) {
                 const checkedCount = document.querySelectorAll(".protein-checkbox:checked").length;
                 if (checkedCount < 2) {
-                    event.preventDefault(); // Prevent form submission
-                    alert("Please select at least two proteins for MSA!"); // Alert the user
+                    event.preventDefault();
+                    alert("Please select at least two proteins for MSA!");
                 }
             });
         });

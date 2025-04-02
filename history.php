@@ -95,7 +95,7 @@ try {
         <nav>
             <ul>
                 <li><a href="index.php">Home</a></li>
-                <li><a href="results.php">Example Data</a></li>
+                <li><a href="https://bioinfmsc8.bio.ed.ac.uk/~s2746775/website/results.php?search_id=search_67e43bf6e7acb5.85963812&protein_family=glucose-6-phosphatase&taxonomy=Aves">Example Data</a></li>
                 <li><a href="history.php">History</a></li>
                 <li><a href="credits.php">Credits</a></li>
 

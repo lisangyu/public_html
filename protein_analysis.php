@@ -26,6 +26,11 @@ if ($result) {
     echo "<p><strong>Property Results:</strong> <pre>" . nl2br(htmlspecialchars_decode($result['property_results'])) . "</pre></p>";
     echo "<p><strong>Secondary Structure Results:</strong> <pre>" . nl2br(htmlspecialchars_decode($result['structure_results'])) . "</pre></p>";
     echo "</div>";
+    echo "<div class='download-links'>";
+    echo "<a href='motif_results/{$protein_id}_motif.txt' download='{$protein_id}_motif.txt' class='download-link'>Download Motif Result File</a><br>";
+    echo "<a href='property_results/{$protein_id}_property.txt' download='{$protein_id}_property.txt' class='download-link'>Download Property Result File</a><br>";
+    echo "<a href='structure_results/{$protein_id}_structure.txt' download='{$protein_id}_structure.txt' class='download-link'>Download Secondary Structure Result File</a>";
+    echo "</div>";
 } else {
     // If protein_id does not exist, retrieve the sequence and run Python scripts
     $stmt = $pdo->prepare("SELECT sequence FROM protein_sequences WHERE protein_id = :protein_id");
@@ -86,6 +91,12 @@ if ($result) {
         echo "<h3>Motif Results:</h3><pre>{$motif_results}</pre>";
         echo "<h3>Property Results:</h3><pre>{$property_results}</pre>";
         echo "<h3>Secondary Structure Results:</h3><pre>{$structure_results}</pre>";
+        echo "</div>";
+        
+        echo "<div class='download-links'>";
+        echo "<a href='motif_results/{$protein_id}_motif.txt' download='{$protein_id}_motif.txt' class='download-link'>Download Motif Result File</a><br>";
+        echo "<a href='property_results/{$protein_id}_property.txt' download='{$protein_id}_property.txt' class='download-link'>Download Property Result File</a>";
+        echo "<a href='structure_results/{$protein_id}_structure.txt' download='{$protein_id}_structure.txt' class='download-link'>Download Secondary Structure Result File</a>";
         echo "</div>";
     } else {
         echo "<div class='error-message'>Protein sequence not found for Protein ID: {$protein_id}</div>";
@@ -161,5 +172,42 @@ echo "</div>";
     .error-message a {
         color: white;
         text-decoration: underline;
+    }
+
+    .download-links {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    }
+
+    .download-links a {
+        display: inline-block;
+        margin: 10px 15px;
+        padding: 12px 20px;
+        background-color: #2980b9;
+        color: white;
+        text-decoration: none;
+        font-size: 1.2em;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .download-links a:hover {
+        background-color: #3498db;
+        transform: translateY(-3px);
+    }
+
+    .download-links a:active {
+        transform: translateY(0);
+    }
+
+    .download-links .error-message {
+        color: #e74c3c;
+        font-weight: bold;
+        margin-top: 10px;
+        font-size: 1.1em;
     }
 </style>

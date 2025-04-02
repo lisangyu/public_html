@@ -68,6 +68,13 @@ echo "<h2 class='result-header'>Conservation Plot</h2>";
 echo "<div class='plot-container'>";
 echo "<img src='conservation_results/{$search_id}_plotcon.png' alt='Plotcon Image' />";
 echo "</div>";
+
+// Add download links for the files
+echo "<div class='download-links'>";
+echo "<a href='conservation_results/{$search_id}.aln' download='{$search_id}.aln' class='download-link'>Download Clustalo Alignment File</a><br>";
+echo "<a href='conservation_results/{$search_id}_plotcon.png' download='{$search_id}_plotcon.png' class='download-link'>Download Plotcon Image</a>";
+echo "</div>";
+
 echo "</div>";
 ?>
 
@@ -136,5 +143,42 @@ echo "</div>";
     .success-message {
         background-color: #2ecc71;
         color: white;
+    }
+
+    .download-links {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    }
+
+    .download-links a {
+        display: inline-block;
+        margin: 10px 15px;
+        padding: 12px 20px;
+        background-color: #2980b9;
+        color: white;
+        text-decoration: none;
+        font-size: 1.2em;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .download-links a:hover {
+        background-color: #3498db;
+        transform: translateY(-3px);
+    }
+
+    .download-links a:active {
+        transform: translateY(0);
+    }
+
+    .download-links .error-message {
+        color: #e74c3c;
+        font-weight: bold;
+        margin-top: 10px;
+        font-size: 1.1em;
     }
 </style>

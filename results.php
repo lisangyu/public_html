@@ -50,6 +50,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Search Results</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="results_style.css">
     <style>
         table {
             width: 100%;
@@ -100,7 +101,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <nav>
             <ul>
                 <li><a href="index.php">Home</a></li>
-                <li><a href="results.php">Example Data</a></li>
+                <li><a href="https://bioinfmsc8.bio.ed.ac.uk/~s2746775/website/results.php?search_id=search_67e43bf6e7acb5.85963812&protein_family=glucose-6-phosphatase&taxonomy=Aves">Example Data</a></li>
                 <li><a href="history.php">History</a></li>
                 <li><a href="credits.php">Credits</a></li>
 
@@ -161,17 +162,21 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <a href="?search_id=<?= urlencode($search_id) ?>&protein_family=<?= urlencode($protein_family) ?>&taxonomy=<?= urlencode($taxonomy) ?>&page=<?= $page + 1 ?>&orderby=<?= urlencode($orderBy) ?>&order=<?= urlencode($order) ?>">Next »</a>
                 <?php endif; ?>
             </div>
+            <div class="button-container">
+                <button type="submit" id="run-msa-btn" disabled>Run MSA (Clustal Omega)</button>
+                <a href="conservation_analysis.php?search_id=<?= urlencode($search_id) ?>" id="conservation-analysis-link"
+                    <?php if ($total_rows <= 1): ?> 
+                        style="pointer-events: none; color: white; background-color: #ccc; cursor: not-allowed;" 
+                    <?php endif; ?>>
+                    Perform Conservation Level Analysis on All Proteins
+                </a>
+            </div>
 
-            <!-- Run MSA button, disabled initially -->
-            <button type="submit" id="run-msa-btn" disabled>Run MSA (Clustal Omega)</button>
+            <!-- Warning message when not enough proteins are selected -->
+            <p id="warning" class="warning" style="display:none;">Please select at least two proteins for MSA!</p>
+
         </form>
 
-        <!-- Link to perform conservation level analysis on all proteins, always visible -->
-        <br><br>
-        <a href="conservation_analysis.php?search_id=<?= urlencode($search_id) ?>" id="conservation-analysis-link">Perform Conservation Level Analysis on All Proteins</a>
-
-        <!-- Warning message when not enough proteins are selected -->
-        <p id="warning" class="warning" style="display:none;">Please select at least two proteins for MSA!</p>
 
     <?php else: ?>
         <p>No results found for this search.</p>

@@ -45,8 +45,9 @@ session_start();
             <input type="text" id="taxonomy" name="taxonomy" placeholder="Enter taxonomy" required>
             
             <div id="error-message"></div>
+            <div id="loading-message" style="display:none;">Searching, please wait...</div>
 
-            <button type="submit">Search</button>
+            <button type="submit" id="search-button">Search</button>
         </form>
     </section>
 
@@ -54,6 +55,10 @@ session_start();
         document.getElementById("search-form").addEventListener("submit", function(event) {
             event.preventDefault(); 
 
+            let searchButton = document.getElementById("search-button");
+            let loadingMessage = document.getElementById("loading-message");
+            searchButton.disabled = true;
+            loadingMessage.style.display = "block";
             let formData = new FormData(this);
             let proteinFamily = document.getElementById("protein-family").value;
             let taxonomy = document.getElementById("taxonomy").value;
@@ -66,6 +71,8 @@ session_start();
             .then(data => {
                 let messageBox = document.getElementById("error-message");
                 messageBox.style.display = "block"; 
+                loadingMessage.style.display = "none";
+                searchButton.disabled = false;
                 if (data.status === "success") {
                     let url = "results.php?search_id=" + encodeURIComponent(data.search_id) +
                       "&protein_family=" + encodeURIComponent(proteinFamily) +
@@ -78,6 +85,8 @@ session_start();
             })
             .catch(error => {
                 console.error("Error:", error);
+                loadingMessage.style.display = "none";
+                searchButton.disabled = false;
                 alert("Request failed." + error.message);
             });
         });
